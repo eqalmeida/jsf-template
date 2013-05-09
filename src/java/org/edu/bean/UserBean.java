@@ -1,13 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.edu.bean;
 
-import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 
 /**
  *
@@ -15,7 +9,7 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean(name = "user")
 @SessionScoped
-public class UserBean {
+public class UserBean extends GenericBean {
 
     private boolean logado = false;
     private String loginName;
@@ -25,12 +19,7 @@ public class UserBean {
      * Creates a new instance of UserBean
      */
     public UserBean() {
-    }
-
-    private void redirect(String outcome) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        ConfigurableNavigationHandler handler = (ConfigurableNavigationHandler) context.getApplication().getNavigationHandler();
-        handler.performNavigation(outcome);
+        super();
     }
 
     public void checkLogin() {
@@ -68,6 +57,10 @@ public class UserBean {
             logado = true;
             redirect("index");
         }
+        else{
+            showError("Login inválido!");
+        }
+        
     }
     
     public void doLogoff(){
@@ -75,5 +68,6 @@ public class UserBean {
         loginPassword = "";
         logado = false;
         redirect("login");
+        showInfo("Sessão encerrada!");
     }
 }
