@@ -3,6 +3,9 @@ package org.edu.bean;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 
 /**
  * Bean genérico com funções comuns para os demais beans.
@@ -10,7 +13,42 @@ import javax.faces.context.FacesContext;
  */
 public abstract class GenericBean {
 
+    protected static EntityManager manager;
+    
+    static {
+        try{
+            manager = Persistence.createEntityManagerFactory("").createEntityManager();
+        }
+        catch(Exception e){
+            
+        }
+    }
+    
     public GenericBean() {
+    }
+    
+    /**
+     * Inicializa uma transação de persistência.
+     */
+    protected void initTransaction(){
+        manager.getTransaction().begin();
+    }
+
+    /**
+     * Executa uma transação de persistência.
+     */
+    protected void commitTransaction(){
+        manager.getTransaction().commit();
+    }
+
+    /**
+     * Cancela uma transação de persistência.
+     */
+    protected void rollbackTransaction(){
+        EntityTransaction transaction = manager.getTransaction();
+        if(transaction.isActive()){
+            transaction.rollback();
+        }
     }
 
     /**
