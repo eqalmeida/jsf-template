@@ -2,7 +2,6 @@ package org.edu.bean;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.event.ComponentSystemEvent;
 
 /**
  *
@@ -61,7 +60,6 @@ public class UserBean extends GenericBean {
         else{
             showError("Login inválido!");
         }
-        
     }
     
     public void doLogoff(){
