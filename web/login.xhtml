@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+        <link href="./resources/css/default.css" rel="stylesheet" type="text/css" />
+    </h:head>
+    <h:body>
+        <h:form>
+            
+            <p:growl autoUpdate="true"/>
+            
+            <div  class="centerDiv" style="width: 500px;border: solid 1px #999;padding: 10px">
+            <h:panelGrid columns="2">
+                Login:
+                <h:inputText id="txLogin" value="#{user.loginName}" required="true" label="login"
+                             style="#{ component.valid ? '' : 'border-color:red;'}"/>
+                Senha:
+                <h:inputSecret id="txSenha" value="#{user.loginPassword}" required="true" label="Senha"
+                               style="#{ component.valid ? '' : 'border-color:red;'}"/>
+                
+            </h:panelGrid>
+            <h:commandButton value="Logar" action="#{user.doLogin()}" />
+            </div>
+        </h:form>
+    </h:body>
+</html>
+
