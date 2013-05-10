@@ -6,6 +6,7 @@ import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import org.edu.model.GenericEntity;
 
 /**
  * Bean genérico com funções comuns para os demais beans.
@@ -49,6 +50,24 @@ public abstract class GenericBean {
         if(transaction.isActive()){
             transaction.rollback();
         }
+    }
+    
+    protected void createEntity(GenericEntity entity){
+        manager.persist(entity);
+    }
+    
+    protected void updateEntity(GenericEntity entity){
+        manager.merge(entity);
+    }
+    
+    protected void deleteEntity(GenericEntity entity){
+        updateEntity(entity);
+        manager.remove(entity);
+    }
+    
+    protected Object findEntity(Object id, Class<?> type){
+        Object obj = manager.find(type, id);
+        return obj;
     }
 
     /**
