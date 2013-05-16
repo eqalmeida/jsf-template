@@ -1,12 +1,12 @@
 package org.edu.repo;
 
-import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import org.edu.model.GenericEntity;
+import javax.persistence.Query;
+import org.edu.model.EntityFacade;
 
-public class GenericRepo<T extends GenericEntity> {
+public class GenericRepo<T extends EntityFacade> {
 
     private EntityManager em;
     private Class<T> type;
@@ -37,11 +37,26 @@ public class GenericRepo<T extends GenericEntity> {
         }
     }
     
-    public List<T> listaTodos(){
-        
-        
+    public T buscaPorId(Object Id){
+        T obj = em.find(type, Id);
+        return obj;
+    }
+    
+    private Query tudoQuery(){
         String sql = "SELECT x FROM "+type.getName()+" x";
-        return em.createQuery(sql).getResultList();
+        return em.createQuery(sql);
+    }
+    
+    public List<T> listaTodos(){
+        return tudoQuery().getResultList();
+    }
+    
+    public List<T> listaTodos(int pageSize, int first){
+        
+        Query query = tudoQuery();
+        query.setMaxResults(pageSize);
+        query.setFirstResult(first);
+        return query.getResultList();
     }
     
     public T busca(String campo, String valor){

@@ -1,8 +1,9 @@
 package org.edu.model;
 
-public class Cliente implements GenericEntity<Integer> {
+public class Cliente implements EntityFacade<Integer> {
     
     private Integer id;
+    private int version;
 
     @Override
     public Integer getId() {
@@ -18,5 +19,7 @@ public class Cliente implements GenericEntity<Integer> {
     public boolean isNew() {
         return(this.id==null?true:this.id==0?true:false);
     }
+
+    
     
 }

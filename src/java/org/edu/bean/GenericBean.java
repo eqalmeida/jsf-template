@@ -6,7 +6,7 @@ import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import org.edu.model.GenericEntity;
+import org.edu.model.EntityFacade;
 
 /**
  * Bean genérico com funções comuns para os demais beans.
@@ -52,15 +52,15 @@ public abstract class GenericBean {
         }
     }
     
-    protected void createEntity(GenericEntity entity){
+    protected void createEntity(EntityFacade entity){
         manager.persist(entity);
     }
     
-    protected void updateEntity(GenericEntity entity){
+    protected void updateEntity(EntityFacade entity){
         manager.merge(entity);
     }
     
-    protected void deleteEntity(GenericEntity entity){
+    protected void deleteEntity(EntityFacade entity){
         updateEntity(entity);
         manager.remove(entity);
     }
