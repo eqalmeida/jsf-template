@@ -3,10 +3,6 @@ package org.edu.bean;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-import org.edu.model.EntityFacade;
 
 /**
  * Bean genérico com funções comuns para os demais beans.
@@ -14,61 +10,10 @@ import org.edu.model.EntityFacade;
  */
 public abstract class GenericBean {
 
-    protected static EntityManager manager;
-    
-    static {
-        try{
-            manager = Persistence.createEntityManagerFactory("").createEntityManager();
-        }
-        catch(Exception e){
-            
-        }
-    }
     
     public GenericBean() {
     }
     
-    /**
-     * Inicializa uma transação de persistência.
-     */
-    protected void initTransaction(){
-        manager.getTransaction().begin();
-    }
-
-    /**
-     * Executa uma transação de persistência.
-     */
-    protected void commitTransaction(){
-        manager.getTransaction().commit();
-    }
-
-    /**
-     * Cancela uma transação de persistência.
-     */
-    protected void rollbackTransaction(){
-        EntityTransaction transaction = manager.getTransaction();
-        if(transaction.isActive()){
-            transaction.rollback();
-        }
-    }
-    
-    protected void createEntity(EntityFacade entity){
-        manager.persist(entity);
-    }
-    
-    protected void updateEntity(EntityFacade entity){
-        manager.merge(entity);
-    }
-    
-    protected void deleteEntity(EntityFacade entity){
-        updateEntity(entity);
-        manager.remove(entity);
-    }
-    
-    protected Object findEntity(Object id, Class<?> type){
-        Object obj = manager.find(type, id);
-        return obj;
-    }
 
     /**
      * Redireciona para um caso de navegação.

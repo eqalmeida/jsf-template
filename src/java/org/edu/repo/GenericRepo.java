@@ -43,7 +43,7 @@ public class GenericRepo<T extends EntityFacade> {
     }
     
     private Query tudoQuery(){
-        String sql = "SELECT x FROM "+type.getName()+" x";
+        String sql = "SELECT x FROM "+type.getSimpleName()+" x";
         return em.createQuery(sql);
     }
     

@@ -1,12 +1,9 @@
 package org.edu.bean;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import org.edu.model.Cliente;
 import org.edu.repo.GenericRepo;
-import org.edu.repo.VersionException;
 
 /**
  *
@@ -69,10 +66,6 @@ public class UserBean extends GenericBean {
     
     public void doLogoff(){
         
-        GenericRepo<Cliente> cliRepo = new GenericRepo(manager,Cliente.class);
-        
-        Cliente c = new Cliente();
-        cliRepo.gravar(c);
         
         loginName = "";
         loginPassword = "";
