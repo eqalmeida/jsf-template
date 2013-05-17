@@ -11,8 +11,8 @@ public class GenericRepo<T extends EntityFacade> {
     private EntityManager em;
     private Class<T> type;
 
-    public GenericRepo(EntityManager em, Class<T> type) {
-        this.em = em;
+    public GenericRepo(Class<T> type) {
+        this.em = Connection.getManager();
         this.type = type;
     }
 
