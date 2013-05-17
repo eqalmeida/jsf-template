@@ -15,28 +15,58 @@
             </ui:define>
 
             <ui:define name="content">
+                
+                <p:growl autoUpdate="true"/>
+                
 
-                <h:form>
+                <h:form id="tblForm">
+
+                    <div style="text-align: right">
+                    <p:commandButton value="Novo"
+                                     update=":dlgForm:dlgPanel"
+                                     action="#{clienteBean.novo()}"/>
+
+                    </div>
 
                     <p:dataTable value="#{clienteBean.listarTodos}" var="cliente">
                         <p:column headerText="ID">
                             #{cliente.id}
                         </p:column>
-                        <p:column headerText="NOME">
-                            <h:commandLink value="#{cliente.nome}"
-                                           action="#{clienteBean.editar(cliente.id)}" />
+                        <p:column headerText="NOME" style="width: 100%">
+                            <p:commandLink value="#{cliente.nome}" 
+                                           update=":dlgForm:dlgPanel"
+                                           action="#{clienteBean.editar(cliente)}" />
 
                         </p:column>
 
                         <p:column>
-                            <p:commandButton value="Excluir" action="#{clienteBean.excluir(cliente.id)}" />
+                            <p:commandButton
+                                onclick="return confirm('Tem certeza?')"
+                                update="@form"
+                                value="Excluir" action="#{clienteBean.excluir(cliente.id)}" />
 
                         </p:column>
                     </p:dataTable>
 
-                    <p:commandButton value="Novo"
-                                     action="#{clienteBean.novo()}"/>
+                </h:form>
 
+                <h:form id="dlgForm">
+                    <h:panelGroup id="dlgPanel">
+                    <p:dialog 
+                        header="Cadastro de Cliente" 
+                        widgetVar="clienteDlg">  
+                        
+                        <h:panelGrid columns="2">
+                            <h:outputText value="Nome:" />
+                            <p:inputText value="#{clienteBean.cliente.nome}" />
+                        </h:panelGrid>
+                        
+                        <p:commandButton 
+                            update=":tblForm"
+                            value="Gravar" action="#{clienteBean.gravar()}"/>
+
+                    </p:dialog>   
+                    </h:panelGroup>
                 </h:form>
 
             </ui:define>

@@ -12,7 +12,7 @@ public class Connection {
             manager = Persistence.createEntityManagerFactory("lojaPU").createEntityManager();
         }
         catch(Exception e){
-            
+            e.printStackTrace();
         }
     }
 

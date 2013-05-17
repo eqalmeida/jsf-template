@@ -11,6 +11,13 @@
     margin: auto;
 }
 
+.ui-widget {
+    font-size: 90%;
+ }
+.ui-widget .ui-widget {
+    font-size: 100%;
+ }
+
 body {
     background-color: #ffffff;
     font-size: 12px;
