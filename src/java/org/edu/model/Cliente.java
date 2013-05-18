@@ -15,7 +15,13 @@ public class Cliente implements EntityFacade<Integer> {
     
     @Column(length = 60, unique = true, nullable = false)
     private String nome;
+    
+    @Column(length = 15)
+    private String telefone;
 
+    @Column(length = 120)
+    private String email;
+    
     public String getNome() {
         return nome;
     }
@@ -23,6 +29,24 @@ public class Cliente implements EntityFacade<Integer> {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    
 
     @Override
     public int hashCode() {

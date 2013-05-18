@@ -15,28 +15,44 @@
             </ui:define>
 
             <ui:define name="content">
-                
+
                 <p:growl autoUpdate="true"/>
-                
+
 
                 <h:form id="tblForm">
 
-                    <div style="text-align: right">
-                    <p:commandButton value="Novo"
-                                     update=":dlgForm:dlgPanel"
-                                     action="#{clienteBean.novo()}"/>
+                    <table width="100%">
+                        <tr>
+                            <td width="100%">
+                                <h2>Cadastro de Clientes</h2>
+                            </td>
+                            <td nowrap="nowrap">
+                                <p:commandButton value="Novo"
+                                                 update=":dlgForm:dlgPanel"
+                                                 action="#{clienteBean.novo()}"/>
 
-                    </div>
+
+                            </td>
+                        </tr>
+                    </table>
 
                     <p:dataTable value="#{clienteBean.listarTodos}" var="cliente">
                         <p:column headerText="ID">
                             #{cliente.id}
                         </p:column>
-                        <p:column headerText="NOME" style="width: 100%">
+                        <p:column headerText="NOME" sortBy="#{cliente.nome}">
                             <p:commandLink value="#{cliente.nome}" 
                                            update=":dlgForm:dlgPanel"
                                            action="#{clienteBean.editar(cliente)}" />
 
+                        </p:column>
+
+                        <p:column headerText="Telefone" sortBy="#{cliente.telefone}">
+                            #{cliente.telefone}
+                        </p:column>
+
+                        <p:column headerText="E-mail" sortBy="#{cliente.email}">
+                            #{cliente.email}
                         </p:column>
 
                         <p:column>
@@ -46,27 +62,36 @@
                                 value="Excluir" action="#{clienteBean.excluir(cliente.id)}" />
 
                         </p:column>
+
                     </p:dataTable>
 
                 </h:form>
 
                 <h:form id="dlgForm">
-                    <h:panelGroup id="dlgPanel">
                     <p:dialog 
+                        resizable="false"
                         header="Cadastro de Cliente" 
                         widgetVar="clienteDlg">  
-                        
-                        <h:panelGrid columns="2">
-                            <h:outputText value="Nome:" />
-                            <p:inputText value="#{clienteBean.cliente.nome}" />
-                        </h:panelGrid>
-                        
-                        <p:commandButton 
-                            update=":tblForm"
-                            value="Gravar" action="#{clienteBean.gravar()}"/>
+                        <h:panelGroup id="dlgPanel">
+
+                            <h:panelGrid columns="2" cellpadding="5px">
+                                <h:outputText value="Nome:" />
+                                <p:inputText value="#{clienteBean.cliente.nome}" label="Nome" required="true" size="50"/>
+                                <h:outputText value="Telefone:" />
+                                <p:inputText value="#{clienteBean.cliente.telefone}" label="Telefone"/>
+                                <h:outputText value="E-mail:" />
+                                <p:inputText value="#{clienteBean.cliente.email}" label="E-mail" size="50"/>
+                            </h:panelGrid>
+
+                        </h:panelGroup>
+                        <f:facet name="footer">
+                            <p:commandButton 
+                                update=":tblForm dlgPanel"
+                                value="Gravar" action="#{clienteBean.gravar()}"/>
+                            
+                        </f:facet>
 
                     </p:dialog>   
-                    </h:panelGroup>
                 </h:form>
 
             </ui:define>
