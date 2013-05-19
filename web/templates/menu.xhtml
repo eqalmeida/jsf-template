@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition>
+            <h:form>
+                <p:tabMenu activeIndex="#{index}">  
+                    <p:menuitem value="Inicio" url="/index.jsf" icon="ui-icon-star"/>  
+                    <p:menuitem value="Clientes" url="/clientes.jsf" icon="ui-icon-star"/>  
+                    <p:menuitem value="Pedido" url="/pedido.jsf" icon="ui-icon-search" />  
+                    <p:menuitem value="Documentation" url="/ui/tabMenuDocumentation.jsf" icon="ui-icon-document"/>  
+                    <p:menuitem value="Support" url="/ui/tabMenuSupport.jsf" icon="ui-icon-wrench"/>  
+                    <p:menuitem value="Social" url="/ui/tabMenuSocial.jsf" icon="ui-icon-person" />  
+                </p:tabMenu> 
+            </h:form>
+        </ui:composition>
+    </body>
+</html>

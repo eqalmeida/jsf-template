@@ -4,25 +4,31 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
 import org.edu.model.Cliente;
-import org.edu.repo.GenericRepo;
+import org.edu.repo.Repositorio;
 import org.primefaces.context.RequestContext;
 
 @ManagedBean
 @ViewScoped
 public class ClienteBean extends GenericBean{
     
-    private GenericRepo<Cliente> repo = null;
+    private Repositorio<Cliente> repo = null;
     private Cliente cliente;
-    private DataModel<Cliente> clientes;
+    private List<Cliente> clientes;
+    private static int versaoGlobal = 0;
+    private int versaoLocal = 0;
     
     @PostConstruct
     private void init(){
-        repo = new GenericRepo(Cliente.class);
+        repo = new Repositorio(Cliente.class);
         cliente = new Cliente();
     }
+
+    public int getVersaoLocal() {
+        return versaoLocal;
+    }
+    
+    
 
     public Cliente getCliente() {
         return cliente;
@@ -71,7 +77,9 @@ public class ClienteBean extends GenericBean{
             repo.gravar(cliente);
             cliente = new Cliente();
             closeJSFDialog();
+            versaoGlobal += 1;
             showInfo("Cliente gravado com sucesso!");
+           
         }
         catch(Exception e){
             showError(e);
@@ -84,14 +92,19 @@ public class ClienteBean extends GenericBean{
             repo.excluir(cliente);
             cliente = new Cliente();
             showInfo("Cliente excluído com sucesso!");
+            versaoGlobal += 1;
         }
         catch(Exception e){
             showError(e);
         }
     }
     
-    public DataModel<Cliente> getListarTodos(){
-        clientes = new ListDataModel<Cliente>(repo.listaTodos());
+    public List<Cliente> getListarTodos(){
+        if(clientes == null || versaoGlobal != versaoLocal){
+            versaoLocal = versaoGlobal;
+            clientes = repo.listaTodos();
+        }
+        
         return clientes;
     }
 }

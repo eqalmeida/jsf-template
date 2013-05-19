@@ -6,12 +6,12 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import org.edu.model.EntityFacade;
 
-public class GenericRepo<T extends EntityFacade> {
+public class Repositorio<T extends EntityFacade> {
 
     private EntityManager em;
     private Class<T> type;
 
-    public GenericRepo(Class<T> type) {
+    public Repositorio(Class<T> type) {
         this.em = Connection.getManager();
         this.type = type;
     }
@@ -60,8 +60,14 @@ public class GenericRepo<T extends EntityFacade> {
     }
     
     public T busca(String campo, String valor){
-        String sql = "SELECT x FROM "+type.getName()+ " WHERE x."+campo+" = '"+valor+"'";
-        T obj = (T) em.createQuery(sql).getSingleResult();
+        String sql = "SELECT x FROM "+type.getSimpleName()+ " x WHERE x."+campo+" = '"+valor+"'";
+        Query query = em.createQuery(sql);
+        
+        List<T> l = query.getResultList();
+        if(l == null || l.isEmpty()){
+            return null;
+        }
+        T obj = (T) l.get(0);
         return obj;
     }
 

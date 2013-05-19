@@ -1,9 +1,12 @@
 package org.edu.bean;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import org.edu.model.Cliente;
-import org.edu.repo.GenericRepo;
+import org.edu.model.Usuario;
+import org.edu.repo.Repositorio;
 
 /**
  *
@@ -14,8 +17,10 @@ import org.edu.repo.GenericRepo;
 public class UserBean extends GenericBean {
 
     private boolean logado = false;
+    private Integer usuarioId;
     private String loginName;
     private String loginPassword;
+    private Repositorio<Usuario> repositorio;
 
     /**
      * Creates a new instance of UserBean
@@ -23,11 +28,40 @@ public class UserBean extends GenericBean {
     public UserBean() {
         super();
     }
+    
+    @PostConstruct
+    private void init(){
+        repositorio = new Repositorio(Usuario.class);
+        
+        Usuario admin = repositorio.busca("login", "admin");
+        
+        if(admin == null){
+            admin = new Usuario();
+            admin.setLogin("admin");
+            admin.setSenha("admin");
+            admin.setAdministrador(true);
+            
+            repositorio.gravar(admin);
+            
+        }
+    }
 
     public void checkLogin() {
         if (!logado) {
             redirect("login");
         }
+    }
+    
+    public Usuario getUsuarioLogado(){
+        
+        Usuario user = new Usuario();
+        
+        if(logado){
+            user = repositorio.buscaPorId(usuarioId);
+            
+        }
+        
+        return user;
     }
 
     public boolean isLogado() {
@@ -55,13 +89,31 @@ public class UserBean extends GenericBean {
     }
 
     public void doLogin() {
-        if (loginName.equals("eqalmeida") && loginPassword.equals("181294")) {
-            logado = true;
-            redirect("index");
-        }
-        else{
+        
+        Usuario user = repositorio.busca("login", loginName);
+        
+        if(user == null){
             showError("Login inválido!");
+            return;
         }
+        
+        if(!(user.getSenha().equals(loginPassword))){
+            showError("Senha inválida!");
+            return;
+        }
+        
+        if(!(user.isAtivo())){
+            showError("Usuário desativado!");
+            return;
+        }
+
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.getExternalContext().getSessionMap().put("userId", user.getId());        
+        
+        
+        usuarioId = user.getId();
+        logado = true;
+        redirect("index");
     }
     
     public void doLogoff(){

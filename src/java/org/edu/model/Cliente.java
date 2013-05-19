@@ -1,13 +1,16 @@
 package org.edu.model;
 
+import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
-public class Cliente implements EntityFacade<Integer> {
+public class Cliente implements EntityFacade<Integer>, Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +25,29 @@ public class Cliente implements EntityFacade<Integer> {
     @Column(length = 120)
     private String email;
     
+    @OneToMany(mappedBy = "cliente")
+    private Collection<Pedido> pedidos;
+    
+    
+
+    public Collection<Pedido> getPedidos() {
+        return pedidos;
+    }
+
+    public void setPedidos(Collection<Pedido> pedidos) {
+        this.pedidos = pedidos;
+    }
+    
+    
+    
     public String getNome() {
         return nome;
     }
 
     public void setNome(String nome) {
+        if(nome != null){
+            nome = nome.toUpperCase();
+        }
         this.nome = nome;
     }
 

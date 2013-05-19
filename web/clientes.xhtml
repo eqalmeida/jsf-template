@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <body>
+
+        <ui:composition template="./templates/LoggedInTemplate.xhtml">
+
+            <ui:define name="top">
+                <ui:include src="./templates/menu.xhtml" >
+                    <ui:param name="index" value="1" />
+                </ui:include>
+            </ui:define>
+
+            <ui:define name="content">
+
+                <p:growl autoUpdate="true"/>
+
+
+                <h:form id="tblForm">
+
+                    <table width="100%">
+                        <tr>
+                            <td width="100%">
+                                <h2>Cadastro de Clientes</h2>
+                            </td>
+                            <td>
+
+                            </td>
+                            <td nowrap="nowrap">
+
+
+                            </td>
+                        </tr>
+                    </table>
+
+                    <p:dataTable value="#{clienteBean.listarTodos}" var="cliente">
+                        <p:column headerText="ID">
+                            #{cliente.id}
+                        </p:column>
+                        <p:column headerText="NOME" sortBy="#{cliente.nome}">
+                            <p:commandLink value="#{cliente.nome}" 
+                                           update=":dlgForm:dlgPanel"
+                                           action="#{clienteBean.editar(cliente)}" />
+
+                        </p:column>
+
+                        <p:column headerText="Telefone" sortBy="#{cliente.telefone}">
+                            #{cliente.telefone}
+                        </p:column>
+
+                        <p:column headerText="E-mail" sortBy="#{cliente.email}">
+                            #{cliente.email}
+                        </p:column>
+
+                        <p:column>
+                            <p:commandButton
+                                onclick="return confirm('Tem certeza?');"
+                                update="@form"
+                                value="Excluir" action="#{clienteBean.excluir(cliente.id)}" />
+
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <div align="left">
+                                <p:commandButton 
+                                    value="Novo"
+                                    update=":dlgForm:dlgPanel"
+                                    action="#{clienteBean.novo()}"/>
+                            </div>
+
+                        </f:facet>
+
+                    </p:dataTable>
+
+                </h:form>
+
+                <h:form id="dlgForm">
+                    <p:dialog 
+                        resizable="false"
+                        header="Cadastro de Cliente" 
+                        widgetVar="clienteDlg">  
+                        <h:panelGroup id="dlgPanel">
+
+                            <ui:include src="./templates/clienteForm.xhtml" >
+                                <ui:param name="cliente" value="#{clienteBean.cliente}" />
+                            </ui:include>
+
+                        </h:panelGroup>
+                        <f:facet name="footer">
+                            <p:commandButton 
+                                update=":tblForm dlgPanel"
+                                value="Gravar" action="#{clienteBean.gravar()}"/>
+
+                        </f:facet>
+
+                    </p:dialog>   
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

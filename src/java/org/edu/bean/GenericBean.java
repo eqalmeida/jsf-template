@@ -3,17 +3,13 @@ package org.edu.bean;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import org.edu.model.Usuario;
 
 /**
  * Bean genérico com funções comuns para os demais beans.
  * @author eduardoalmeida
  */
 public abstract class GenericBean {
-
-    
-    public GenericBean() {
-    }
-    
 
     /**
      * Redireciona para um caso de navegação.
@@ -59,4 +55,14 @@ public abstract class GenericBean {
     protected void showError(Exception exception){
         showMessage(exception.getMessage(), FacesMessage.SEVERITY_ERROR);
     }
+    
+    protected Usuario getUsuarioLogado() {
+        
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        Usuario u = context.getApplication().evaluateExpressionGet(context, "#{user}", UserBean.class).getUsuarioLogado();
+
+        return u;
+    }    
+    
 }
