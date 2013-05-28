@@ -1,13 +1,9 @@
 package org.edu.model;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -17,12 +13,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-public class Pedido implements EntityFacade<Integer>, Serializable {
+public class Pedido extends IntegerModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +42,9 @@ public class Pedido implements EntityFacade<Integer>, Serializable {
     
     @ElementCollection
     private List<ItemPedido> items;
+    
+    @ElementCollection
+    private List<FormaPagamento> pagamentos;
 
     /**
      * Retorna o valor total do Pedido através da soma do valor de cada item.
@@ -79,7 +77,6 @@ public class Pedido implements EntityFacade<Integer>, Serializable {
         return this.id;
     }
 
-    @Override
     public void setId(Integer id) {
         this.id = id;
     }
@@ -128,31 +125,36 @@ public class Pedido implements EntityFacade<Integer>, Serializable {
     public void setItems(List<ItemPedido> items) {
         this.items = items;
     }
-
-    @Override
-    public boolean isNew() {
-        return (this.id == null || this.id == 0);
+    
+    private void reordenarPagamentos(){
+        int cont = 0;
+        for(FormaPagamento p : getPagamentos()){
+            p.setId(cont);
+            cont++;
+        }
+    }
+    
+    public void deletePagamento(FormaPagamento pagamento){
+        getPagamentos().remove(pagamento);
+        reordenarPagamentos();
+    }
+    
+    public void addPagamento(FormaPagamento pagamento){
+        pagamento.setId(getPagamentos().size() + 1);
+        getPagamentos().add(pagamento);
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 29 * hash + (this.id != null ? this.id.hashCode() : 0);
-        return hash;
+    public List<FormaPagamento> getPagamentos() {
+        
+        if(pagamentos == null){
+            pagamentos = new ArrayList();
+        }
+        
+        return pagamentos;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Pedido other = (Pedido) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+    public void setPagamentos(List<FormaPagamento> pagamentos) {
+        this.pagamentos = pagamentos;
     }
+    
 }

@@ -1,6 +1,5 @@
 package org.edu.model;
 
-import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Cliente implements EntityFacade<Integer>, Serializable {
+public class Cliente extends IntegerModel {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,44 +67,13 @@ public class Cliente implements EntityFacade<Integer>, Serializable {
     }
     
     
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + (this.id != null ? this.id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Cliente other = (Cliente) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    
-    
     @Override
     public Integer getId() {
         return this.id;
     }
 
-    @Override
+    
     public void setId(Integer id) {
         this.id = id;
     }
-
-    @Override
-    public boolean isNew() {
-        return(this.id==null?true:this.id==0?true:false);
-    }
-    
 }

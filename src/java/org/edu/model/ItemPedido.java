@@ -8,6 +8,8 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ItemPedido implements Comparable<ItemPedido>, Serializable {
 
+   
+    
     @Column(length = 50, nullable = false)
     private String descricao;
     

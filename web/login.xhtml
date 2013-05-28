@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>Facelet Title</title>
         <link href="./resources/css/default.css" rel="stylesheet" type="text/css" />
@@ -12,7 +13,9 @@
             
             <p:growl autoUpdate="true"/>
             
-            <div  class="centerDiv" style="width: 500px;border: solid 1px #999;padding: 10px">
+            <div  class="centerDiv" style="width: 400px">
+                <p:panel>
+                    <f:facet name="header">Login</f:facet>
             <h:panelGrid columns="2">
                 Login:
                 <h:inputText id="txLogin" value="#{user.loginName}" required="true" label="login"
@@ -22,7 +25,8 @@
                                style="#{ component.valid ? '' : 'border-color:red;'}"/>
                 
             </h:panelGrid>
-            <h:commandButton value="Logar" action="#{user.doLogin()}" />
+                    <p:commandButton value="Logar" action="#{user.doLogin()}" ajax="false"/>
+                </p:panel>
             </div>
         </h:form>
     </h:body>

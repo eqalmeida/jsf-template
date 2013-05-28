@@ -99,9 +99,45 @@
                     </p:dataTable>
 
                 </h:form>
+                <br />
+                <h:form>
+                    <p:dataTable value="#{newPedido.pedido.pagamentos}" var="pag" tableStyle="width:auto" >
+                        <f:facet name="header">Pagamento</f:facet>
+                        
+                        <p:column headerText="ID">
+                            #{pag.id}
+                        </p:column>
+                        
+                        <p:column headerText="Forma de Pagto">
+                            <h:selectOneMenu value="#{pag.pagtoType.id}" >
+                                <f:selectItem itemLabel="Selecione" itemValue="0" />
+                                <f:selectItems
+                                    value="#{newPedido.tiposPagto}"
+                                    var="tipo"
+                                    itemValue="#{tipo.id}"
+                                    itemLabel="#{tipo.nome}" />
+                                <p:ajax update="@form" process="@this" listener="#{newPedido.alteraPagto(pag)}"/>
+                            </h:selectOneMenu>
+                        </p:column>
+                        
+                        <p:column headerText="Valor">
+                            <p:inputText value="#{pag.valor}" disabled="#{ (pag.pagtoType.id > 0) ? 'false':'true'}">
+                                <p:ajax update="@form" />
+                            </p:inputText>
+                        </p:column>
+                        
+                        <p:column headerText="Parcelas">
+                            <p:inputText value="#{pag.qtdParcelas}" disabled="#{ (pag.pagtoType.id > 0) ? 'false':'true'}" size="3">
+                                <p:ajax update="@form" />
+                            </p:inputText>
+                        </p:column>
+                        
+                    </p:dataTable>
+                </h:form>
                 
                 <h:form>
                     <p:commandButton value="Gravar Pedido" action="#{newPedido.gravar()}" ajax="false" />
+                    <p:commandButton value="Novo Pedido" action="#{newPedido.novoPedido()}" ajax="false" />
                 </h:form>
 
                 <h:form id="dlgForm">

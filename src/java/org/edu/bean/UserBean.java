@@ -1,10 +1,13 @@
 package org.edu.bean;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import org.edu.model.Cliente;
+import org.edu.model.PagtoType;
 import org.edu.model.Usuario;
 import org.edu.repo.Repositorio;
 
@@ -20,7 +23,7 @@ public class UserBean extends GenericBean {
     private Integer usuarioId;
     private String loginName;
     private String loginPassword;
-    private Repositorio<Usuario> repositorio;
+    private Repositorio<Usuario> repositorio = null;
 
     /**
      * Creates a new instance of UserBean
@@ -29,7 +32,6 @@ public class UserBean extends GenericBean {
         super();
     }
     
-    @PostConstruct
     private void init(){
         repositorio = new Repositorio(Usuario.class);
         
@@ -43,10 +45,43 @@ public class UserBean extends GenericBean {
             
             repositorio.gravar(admin);
             
+            
+        }
+        //
+        // Cria tipos de pagto
+        //
+        
+        Repositorio<PagtoType> repo = new Repositorio(PagtoType.class);
+        
+        List<PagtoType> l = repo.listaTodos();
+        
+        if(l == null || l.isEmpty()){
+            l = new ArrayList<PagtoType>();
+            
+            l.add(new PagtoType("A Vista"));
+            l.add(new PagtoType("CHEQUE"));
+            l.add(new PagtoType("CARTÃO CRÉDITO"));
+            l.add(new PagtoType("CARTÃO DÉBITO"));
+            
+            for (PagtoType p : l){
+                repo.gravar(p);
+            }
         }
     }
 
     public void checkLogin() {
+
+        if(repositorio == null){
+            try{
+                init();
+            }
+            catch(Exception e){
+                repositorio = null;
+                redirect("erroBD");
+                return;
+            }
+        }
+        
         if (!logado) {
             redirect("login");
         }
@@ -89,6 +124,17 @@ public class UserBean extends GenericBean {
     }
 
     public void doLogin() {
+        if(repositorio == null){
+            try{
+                init();
+            }
+            catch(Exception e){
+                repositorio = null;
+                redirect("erroBD");
+                return;
+            }
+        }
+        
         
         Usuario user = repositorio.busca("login", loginName);
         
@@ -103,6 +149,7 @@ public class UserBean extends GenericBean {
         }
         
         if(!(user.isAtivo())){
+            repositorio = null;
             showError("Usuário desativado!");
             return;
         }
@@ -117,6 +164,17 @@ public class UserBean extends GenericBean {
     }
     
     public void doLogoff(){
+        if(repositorio == null){
+            try{
+                init();
+            }
+            catch(Exception e){
+                repositorio = null;
+                redirect("erroBD");
+                return;
+            }
+        }
+        
         
         
         loginName = "";
