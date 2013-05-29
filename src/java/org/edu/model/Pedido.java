@@ -15,10 +15,15 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import org.edu.service.PedidoService;
 
 @Entity
 public class Pedido extends IntegerModel {
 
+    @Transient
+    private PedidoService service;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -45,6 +50,18 @@ public class Pedido extends IntegerModel {
     
     @ElementCollection
     private List<FormaPagamento> pagamentos;
+
+    public PedidoService getService() {
+        return service;
+    }
+
+    public void setService(PedidoService service) {
+        this.service = service;
+    }
+    
+    public void efetivar(){
+        service.efetiva(this);
+    }
 
     /**
      * Retorna o valor total do Pedido através da soma do valor de cada item.

@@ -117,12 +117,12 @@
                                     #{pag.pagtoType.nome}
                                 </f:facet>
                                 <f:facet name="input">
-                                    <h:selectOneMenu value="#{pag.pagtoType.nome}" style="width:100%">
+                                    <h:selectOneMenu value="#{pag.pagtoType.id}" style="width:100%">
                                     <f:selectItem itemLabel="Selecione" noSelectionOption="true" />
                                     <f:selectItems 
                                         value="#{newPedido.tiposPagto}"
                                         var="t"
-                                        itemValue="#{t.nome}"
+                                        itemValue="#{t.id}"
                                         itemLabel="#{t.nome}" />
                                     <p:ajax update="@this" />
                                 </h:selectOneMenu>
