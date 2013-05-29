@@ -22,8 +22,6 @@ public class PagtoType extends IntegerModel {
     public PagtoType(String nome) {
         this.nome = nome;
     }
-    
-    
 
     public String getNome() {
         return nome;
@@ -33,8 +31,6 @@ public class PagtoType extends IntegerModel {
         this.nome = nome;
     }
 
-    
-    
     @Override
     public Integer getId() {
         return id;

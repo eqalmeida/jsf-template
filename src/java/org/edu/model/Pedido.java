@@ -147,7 +147,7 @@ public class Pedido extends IntegerModel {
     public List<FormaPagamento> getPagamentos() {
         
         if(pagamentos == null){
-            pagamentos = new ArrayList();
+            pagamentos = new ArrayList<FormaPagamento>();
         }
         
         return pagamentos;

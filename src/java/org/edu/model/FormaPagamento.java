@@ -35,9 +35,6 @@ public class FormaPagamento implements Serializable{
     
 
     public PagtoType getPagtoType() {
-        if(pagtoType == null) {
-            pagtoType = new PagtoType();
-        }
         return pagtoType;
     }
 

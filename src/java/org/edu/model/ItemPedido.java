@@ -4,31 +4,32 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.ManyToOne;
 
 @Embeddable
 public class ItemPedido implements Comparable<ItemPedido>, Serializable {
 
-   
+    @ManyToOne
+    private Produto produto;
     
     @Column(length = 50, nullable = false)
     private String descricao;
-    
     @Column(precision = 7, scale = 2)
     private BigDecimal valorUnit;
-    
     private Integer qtd = 1;
-    
+
     /**
      * Calcula o valor total do Item.
+     *
      * @return Valor Total
      */
-    public BigDecimal getValorTotal(){
-        if(this.valorUnit == null || this.qtd == null){
+    public BigDecimal getValorTotal() {
+        if (this.valorUnit == null || this.qtd == null) {
             return BigDecimal.ZERO;
         }
-        
+
         return (this.valorUnit.multiply(new BigDecimal(this.qtd)));
-        
+
     }
 
     public String getDescricao() {
@@ -55,6 +56,16 @@ public class ItemPedido implements Comparable<ItemPedido>, Serializable {
         this.qtd = qtd;
     }
 
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+    
+    
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -76,12 +87,9 @@ public class ItemPedido implements Comparable<ItemPedido>, Serializable {
         }
         return true;
     }
-    
-    
 
     @Override
     public int compareTo(ItemPedido t) {
         return (this.getDescricao().compareTo(t.getDescricao()));
     }
-    
 }
