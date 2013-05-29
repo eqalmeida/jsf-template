@@ -1,12 +1,15 @@
 package org.edu.repo;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import org.edu.model.EntityFacade;
 
-public class Repositorio<T extends EntityFacade> {
+public class Repositorio<T extends EntityFacade> implements Serializable {
+    
+    private static final long serialVersionUID = 7526472295622776123L;
 
     private EntityManager em;
     private Class<T> type;

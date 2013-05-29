@@ -1,5 +1,6 @@
 package org.edu.bean;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -14,16 +15,28 @@ import org.edu.model.Pedido;
 import org.edu.model.PedidoStatus;
 import org.edu.model.Usuario;
 import org.edu.repo.Repositorio;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CellEditEvent;
 
 @ManagedBean(name = "newPedido")
 @SessionScoped
-public class NewPedidoBean extends GenericBean {
+public class NewPedidoBean extends GenericBean implements Serializable{
+    
+    private static final long serialVersionUID = 7526472295622776147L;
 
     private Pedido pedido;
     private ItemPedido item;
-    private FormaPagamento pagamento;
     private List<PagtoType> tiposPagto;
-    private int pagtoTypeId;
+    private Repositorio<PagtoType> pagtoTypeRepo;
+
+    public Repositorio<PagtoType> getPagtoTypeRepo() {
+        if(pagtoTypeRepo == null){
+            pagtoTypeRepo = new Repositorio<PagtoType>(PagtoType.class);
+        }
+        return pagtoTypeRepo;
+    }
+    
+    
 
     public List<PagtoType> getTiposPagto() {
         if (tiposPagto == null || tiposPagto.isEmpty()) {
@@ -95,11 +108,50 @@ public class NewPedidoBean extends GenericBean {
         pedido.setCliente(new Cliente());
 
         item = new ItemPedido();
-        pagamento = new FormaPagamento();
+        
+        //for(int i=0; i<4 ;i++){
+            FormaPagamento fp = new FormaPagamento();
+            fp.setPagtoType(new PagtoType());
+            pedido.addPagamento(fp);
+        //}
 
         pedido.setDataPedido(new Date());
 
     }
+    
+    private void updatePagamentos(){
+        int count = 0;
+        for(FormaPagamento fp : pedido.getPagamentos()){
+            if(!fp.getPagtoType().isNew()){
+                int fpId = fp.getPagtoType().getId();
+                PagtoType type = getPagtoTypeRepo().buscaPorId(fpId);
+                fp.setPagtoType(type);
+            }
+            
+            if(fp.getPagtoType().getNome() != null 
+                    && (!fp.getPagtoType().getNome().isEmpty())
+                    && fp.getValor().doubleValue() > 0.0){
+                count += 1;
+            }
+        }
+        
+        if(count == pedido.getPagamentos().size()){
+            FormaPagamento f = new FormaPagamento();
+            f.setPagtoType(new PagtoType());
+            pedido.addPagamento(f);
+            
+        }
+    }
+    
+    public void onCellEdit(CellEditEvent event) {  
+        Object oldValue = event.getOldValue();  
+        Object newValue = event.getNewValue();  
+          
+        if(newValue != null && !newValue.equals(oldValue)) {  
+            updatePagamentos();
+            RequestContext.getCurrentInstance().update("fmPagtos:tblPagtos");
+        }  
+    }      
 
     public void alteraPagto(FormaPagamento f) {
 
@@ -123,27 +175,6 @@ public class NewPedidoBean extends GenericBean {
         }
     }
 
-    public void addPag() {
-
-        Repositorio<PagtoType> repositorio = new Repositorio<PagtoType>(PagtoType.class);
-
-        PagtoType pagtoType = repositorio.buscaPorId(pagtoTypeId);
-
-        if(pagtoType == null){
-            showError("Tipo "+pagtoTypeId+" não encontrado!");
-            return;
-        }
-        pagamento.setPagtoType(pagtoType);
-
-        //pedido.addPagamento(pagamento);
-        
-        pedido.getPagamentos().add(pagamento);
-        
-        pagamento = new FormaPagamento();
-        pagamento.setPagtoType(new PagtoType());
-        pagtoTypeId = 0;
-    }
-
     public void deleteItem(ItemPedido it) {
         pedido.getItems().remove(it);
     }
@@ -162,21 +193,5 @@ public class NewPedidoBean extends GenericBean {
 
     public void setItem(ItemPedido item) {
         this.item = item;
-    }
-
-    public FormaPagamento getPagamento() {
-        return pagamento;
-    }
-
-    public void setPagamento(FormaPagamento pagamento) {
-        this.pagamento = pagamento;
-    }
-
-    public int getPagtoTypeId() {
-        return pagtoTypeId;
-    }
-
-    public void setPagtoTypeId(int pagtoTypeId) {
-        this.pagtoTypeId = pagtoTypeId;
     }
 }

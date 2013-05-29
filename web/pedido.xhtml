@@ -101,50 +101,58 @@
                 </h:form>
                 <br />
                 <h:form id="fmPagtos">
-                    <p:dataTable value="#{newPedido.pedido.pagamentos}" var="pag" tableStyle="width:auto" id="tblPagtos">
+                    <div style="width: 400px">
+                        <p:dataTable value="#{newPedido.pedido.pagamentos}" editable="true" editMode="cell" var="pag" id="tblPagtos" widgetVar="tabelaPags">
                         <f:facet name="header">Pagamento</f:facet>
+                        
+                        <p:ajax event="cellEdit" listener="#{newPedido.onCellEdit}"/>  
 
-                        <p:column headerText="ID">
+                        <p:column headerText="ID" style="width:10%">
                             #{pag.id}
                         </p:column>
 
-                        <p:column headerText="Forma de Pagto">
-                            <f:facet name="footer">
-                                <h:selectOneMenu value="#{newPedido.pagtoTypeId}"  id="selId">
+                        <p:column headerText="Forma de Pagto" style="width:40%">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    #{pag.pagtoType.nome}
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:selectOneMenu value="#{pag.pagtoType.nome}" style="width:100%">
                                     <f:selectItem itemLabel="Selecione" noSelectionOption="true" />
                                     <f:selectItems 
                                         value="#{newPedido.tiposPagto}"
                                         var="t"
-                                        itemValue="#{t.id}"
+                                        itemValue="#{t.nome}"
                                         itemLabel="#{t.nome}" />
-                                   
+                                    <p:ajax update="@this" />
                                 </h:selectOneMenu>
-                            </f:facet>
-                            #{pag.pagtoType.nome}
+                                </f:facet>
+                            </p:cellEditor>
                         </p:column>
 
-                        <p:column headerText="Valor">
-                            <f:facet name="footer">
-                                <p:inputText value="#{newPedido.pagamento.valor}">
-                                </p:inputText>
-                            </f:facet>
-                            #{pag.valor}
+                        <p:column headerText="Valor" style="width: 40%">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    #{pag.valor}
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{pag.valor}"  style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
                         </p:column>
 
-                        <p:column headerText="Parcelas">
-                            <f:facet name="footer">
-                                <p:inputText value="#{newPedido.pagamento.qtdParcelas}">
-                                </p:inputText>
-                            </f:facet>
-                            #{pag.qtdParcelas}
+                        <p:column headerText="Parcelas" width="10%">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    #{pag.qtdParcelas}
+                                </f:facet>
+                                <f:facet name="input">
+                                  <p:inputText value="#{pag.qtdParcelas}"  style="width:100%"/>  
+                                </f:facet>
+                            </p:cellEditor>
                         </p:column>
-                        <p:column>
-                            <f:facet name="footer">
-                                <p:commandButton value="Gravar" action="#{newPedido.addPag()}" update="@form"/>
-                            </f:facet>
-                        </p:column>
-
                     </p:dataTable>
+                    </div>
                 </h:form>
 
                 <h:form>
