@@ -174,4 +174,25 @@ public class Pedido extends IntegerModel {
         this.pagamentos = pagamentos;
     }
     
+    public void removeItem(int itemId){
+        for (ItemPedido it: getItems()){
+            if(it.getPos() == itemId){
+                getItems().remove(it);
+                break;
+            }
+        }
+        
+        int newPos = 1;
+
+        for (ItemPedido it: getItems()){
+                it.setPos(newPos);
+                newPos += 1 ;
+        }
+    }
+    
+    public void addItem(ItemPedido it){
+        it.setPos(getItems().size()+1);
+        getItems().add(it);
+    }
+    
 }

@@ -5,10 +5,14 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 @Embeddable
 public class ItemPedido implements Comparable<ItemPedido>, Serializable {
 
+    @Transient
+    private int pos;
+    
     @ManyToOne
     private Produto produto;
     
@@ -31,6 +35,16 @@ public class ItemPedido implements Comparable<ItemPedido>, Serializable {
         return (this.valorUnit.multiply(new BigDecimal(this.qtd)));
 
     }
+
+    public int getPos() {
+        return pos;
+    }
+
+    public void setPos(int pos) {
+        this.pos = pos;
+    }
+    
+    
 
     public String getDescricao() {
         return descricao;

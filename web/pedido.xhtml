@@ -22,144 +22,124 @@
 
                 <h2>Cadastro de Pedido</h2>
 
-                <h:form id="tblForm">
+                <p:tabView>
 
-                    <p:panel>
-                        <f:facet name="header">Cliente</f:facet>
-                        <h:panelGrid columns="2">
-                            <h:outputText value="Cliente:"/>
-                            <h:panelGroup>
-                                <p:inputText value="#{newPedido.pedido.cliente.id}" size="3"/>
-                                <p:inputText value="#{newPedido.pedido.cliente.nome}" size="50"/>
-                            </h:panelGroup>
-                            <h:outputText value="Data:"/>
-                            <p:calendar value="#{newPedido.pedido.dataPedido}"/>
-                        </h:panelGrid>
-                    </p:panel>
+                    <p:tab title="Cliente">
 
-                </h:form>
-                <h:form>
-                    <p:panel>
-                        <f:facet name="header">Itens do Pedido</f:facet>
+                        <h:form id="tblForm">
 
+                            <h:panelGrid columns="2">
+                                <h:outputText value="Cliente:"/>
+                                <h:panelGroup>
+                                    <p:inputText value="#{newPedido.pedido.cliente.id}" size="3"/>
+                                    <p:inputText value="#{newPedido.pedido.cliente.nome}" size="50"/>
+                                </h:panelGroup>
+                                <h:outputText value="Data:"/>
+                                <p:calendar value="#{newPedido.pedido.dataPedido}"/>
+                            </h:panelGrid>
 
-                        <h:panelGrid columns="2">
-                            <h:outputText value="Descrição:" />
-                            <p:inputText value="#{newPedido.item.descricao}" size="50" label="Descrição" required="true"/>
-                            <h:outputText value="Valor:" />
-                            <p:inputText value="#{newPedido.item.valorUnit}" size="5" label="Valor" required="true">
-                                <f:validateDoubleRange minimum="0.01" />
-                            </p:inputText>
-                            <h:outputText value="Qtd:" />
-                            <p:inputText value="#{newPedido.item.qtd}" size="3" required="true">
-                                <f:validateLongRange minimum="1" />
-                            </p:inputText>
-                        </h:panelGrid>
-                        <p:commandButton 
-                            value="Adicionar"
-                            update="@form"
-                            action="#{newPedido.addItem()}"/>
+                        </h:form>
+                    </p:tab>
 
-                    </p:panel>    
-                    <p:dataTable value="#{newPedido.pedido.items}" var="it" tableStyle="width:auto">
-                        <p:column headerText="Descrição">
-                            #{it.descricao}
-                        </p:column>
-                        <p:column headerText="Valor">
-                            <h:outputText value="#{it.valorUnit}">
-                                <f:convertNumber type="currency" />
-                            </h:outputText>
+                    <p:tab title="Produtos">
 
-                        </p:column>
-                        <p:column headerText="Quantidade">
+                        <h:form>
+                            <p:dataTable value="#{newPedido.pedido.items}" var="it" tableStyle="width:auto">
 
-                            <p:inputText value="#{it.qtd}" size="3">
-                                <f:validateLongRange minimum="1" maximum="10" />
-                                <p:ajax update="@form" />
-                            </p:inputText>
+                                <p:column headerText="ID">
+                                    #{it.pos}
+                                </p:column>
 
-                            <f:facet name="footer">Total:</f:facet>
-                        </p:column>
-                        <p:column headerText="Total">
-                            <h:outputText value="#{it.valorTotal}">
-                                <f:convertNumber type="currency" />
-                            </h:outputText>
+                                <p:column headerText="Descrição">
+                                    <h:inputText value="#{it.descricao}" size="40"><p:ajax /></h:inputText>
+                                </p:column>
+                                <p:column headerText="Valor">
+                                    <h:inputText value="#{it.valorUnit}" size="10">
+                                        <f:convertNumber pattern="#,##0.00"/>  
+                                        <p:ajax update="@form" />
+                                    </h:inputText>
 
-                            <f:facet name="footer">
-                                <h:outputText value="#{newPedido.pedido.valorTotalPedido}">
-                                    <f:convertNumber type="currency" />
-                                </h:outputText>
+                                </p:column>
+                                <p:column headerText="Quantidade">
 
-                            </f:facet>
-                        </p:column>
+                                    <p:inputText value="#{it.qtd}" size="3">
+                                        <f:validateLongRange minimum="1" maximum="10" />
+                                        <p:ajax update="@form" />
+                                    </p:inputText>
 
-                        <p:column>
-                            <p:commandButton value="Excluir" action="#{newPedido.deleteItem(it)}" update="@form" immediate="true"/>
-                        </p:column>
-                    </p:dataTable>
+                                    <f:facet name="footer">Total:</f:facet>
+                                </p:column>
+                                <p:column headerText="Total">
+                                    <h:outputText value="#{it.valorTotal}">
+                                        <f:convertNumber type="currency" />
+                                    </h:outputText>
 
-                </h:form>
-                <br />
-                <h:form id="fmPagtos">
-                    <div style="width: 400px">
-                        <p:dataTable value="#{newPedido.pedido.pagamentos}" editable="true" editMode="cell" var="pag" id="tblPagtos" widgetVar="tabelaPags">
-                        <f:facet name="header">Pagamento</f:facet>
-                        
-                        <p:ajax event="cellEdit" listener="#{newPedido.onCellEdit}"/>  
+                                    <f:facet name="footer">
+                                        <h:outputText value="#{newPedido.pedido.valorTotalPedido}">
+                                            <f:convertNumber type="currency" />
+                                        </h:outputText>
 
-                        <p:column headerText="ID" style="width:10%">
-                            #{pag.id}
-                        </p:column>
+                                    </f:facet>
+                                </p:column>
 
-                        <p:column headerText="Forma de Pagto" style="width:40%">
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    #{pag.pagtoType.nome}
-                                </f:facet>
-                                <f:facet name="input">
-                                    <h:selectOneMenu value="#{pag.pagtoType.id}" style="width:100%">
-                                    <f:selectItem itemLabel="Selecione" noSelectionOption="true" />
-                                    <f:selectItems 
-                                        value="#{newPedido.tiposPagto}"
-                                        var="t"
-                                        itemValue="#{t.id}"
-                                        itemLabel="#{t.nome}" />
-                                    <p:ajax update="@this" />
-                                </h:selectOneMenu>
-                                </f:facet>
-                            </p:cellEditor>
-                        </p:column>
+                                <p:column>
+                                    <p:commandButton value="Excluir" action="#{newPedido.deleteItem(it.pos)}" ajax="false"/>
 
-                        <p:column headerText="Valor" style="width: 40%">
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    #{pag.valor}
-                                </f:facet>
-                                <f:facet name="input">
-                                    <p:inputText value="#{pag.valor}"  style="width:100%"/>
-                                </f:facet>
-                            </p:cellEditor>
-                        </p:column>
+                                    <f:facet name="footer">
+                                        <p:commandButton value="Adicionar" action="#{newPedido.addItem}" ajax="false"/>
+                                    </f:facet>
+                                </p:column>
+                            </p:dataTable>
 
-                        <p:column headerText="Parcelas" width="10%">
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    #{pag.qtdParcelas}
-                                </f:facet>
-                                <f:facet name="input">
-                                  <p:inputText value="#{pag.qtdParcelas}"  style="width:100%"/>  
-                                </f:facet>
-                            </p:cellEditor>
-                        </p:column>
-                    </p:dataTable>
-                    </div>
-                </h:form>
+                        </h:form>
+                    </p:tab>
+                    <p:tab title="Pagamento">
+                        <h:form id="fmPagtos">
+
+                            <div style="width: 400px">
+                                <p:dataTable value="#{newPedido.pedido.pagamentos}" var="pag" id="tblPagtos">
+                                    <f:facet name="header">Pagamento</f:facet>
+
+                                    <p:column headerText="ID" style="width:10%">
+                                        #{pag.id}
+                                    </p:column>
+
+                                    <p:column headerText="Forma de Pagto">
+                                        <p:selectOneMenu value="#{pag.typeId}" style="width:100%" >
+                                            <f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+                                            <f:selectItems value="#{newPedido.tiposPagtoSL}"/>
+                                            <p:ajax/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+
+                                    <p:column headerText="Valor">
+                                        <p:inputText value="#{pag.valor}">
+                                            <p:ajax/>
+                                        </p:inputText>
+
+                                    </p:column>
+                                    <p:column headerText="Parcelas">
+
+                                        <p:inputText value="#{pag.qtdParcelas}"  style="width:100%">
+                                            <p:ajax/>
+                                        </p:inputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </h:form>
+                    </p:tab>
+                </p:tabView>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
 
                 <h:form>
                     <p:commandButton value="Gravar Pedido" action="#{newPedido.gravar()}" ajax="false" />
                     <p:commandButton value="Novo Pedido" action="#{newPedido.novoPedido()}" ajax="false" />
                 </h:form>
-
+                <br/>
                 <h:form id="dlgForm">
                     <p:dialog 
                         resizable="false"

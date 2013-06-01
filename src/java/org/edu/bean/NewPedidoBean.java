@@ -2,11 +2,13 @@ package org.edu.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 import org.edu.model.Cliente;
 import org.edu.model.FormaPagamento;
 import org.edu.model.ItemPedido;
@@ -25,8 +27,7 @@ public class NewPedidoBean extends GenericBean implements Serializable{
     private static final long serialVersionUID = 7526472295622776147L;
 
     private Pedido pedido;
-    private ItemPedido item;
-    private List<PagtoType> tiposPagto;
+    private List<SelectItem> tiposPagtoSL;
     private Repositorio<PagtoType> pagtoTypeRepo;
 
     public Repositorio<PagtoType> getPagtoTypeRepo() {
@@ -38,13 +39,20 @@ public class NewPedidoBean extends GenericBean implements Serializable{
     
     
 
-    public List<PagtoType> getTiposPagto() {
-        if (tiposPagto == null || tiposPagto.isEmpty()) {
+    public List<SelectItem> getTiposPagtoSL() {
+        if (tiposPagtoSL == null || tiposPagtoSL.isEmpty()) {
             Repositorio<PagtoType> repo = new Repositorio(PagtoType.class);
-            tiposPagto = repo.listaTodos();
-
+            List<PagtoType> tiposPagto = repo.listaTodos();
+            
+            tiposPagtoSL = new ArrayList<SelectItem>();
+            
+            for(PagtoType type: tiposPagto){
+                SelectItem sel = new SelectItem(type.getId(), type.getNome());
+                tiposPagtoSL.add(sel);
+            }
+            
         }
-        return tiposPagto;
+        return tiposPagtoSL;
     }
 
     @PostConstruct
@@ -107,19 +115,25 @@ public class NewPedidoBean extends GenericBean implements Serializable{
         pedido = new Pedido();
         pedido.setCliente(new Cliente());
 
-        item = new ItemPedido();
-        
-        //for(int i=0; i<4 ;i++){
+        for(int i=0; i<4 ;i++){
             FormaPagamento fp = new FormaPagamento();
             fp.setPagtoType(new PagtoType());
             pedido.addPagamento(fp);
+        }
+
+        //for(int i=0; i<4 ;i++){
+            pedido.addItem(new ItemPedido());
         //}
 
         pedido.setDataPedido(new Date());
 
     }
     
-    private void updatePagamentos(){
+    public void pagamentoAlterado(FormaPagamento pag){
+        showInfo("Tipo: " + pag.getPagtoType().getId());
+    }
+    
+    public void updatePagamentos(){
         int count = 0;
         for(FormaPagamento fp : pedido.getPagamentos()){
             if(!fp.getPagtoType().isNew()){
@@ -167,16 +181,11 @@ public class NewPedidoBean extends GenericBean implements Serializable{
     }
 
     public void addItem() {
-        if (pedido.getItems().contains(item)) {
-            showError("Ítem já cadastrado!");
-        } else {
-            this.pedido.getItems().add(item);
-            this.item = new ItemPedido();
-        }
+        pedido.addItem(new ItemPedido());
     }
 
-    public void deleteItem(ItemPedido it) {
-        pedido.getItems().remove(it);
+    public void deleteItem(int itemId) {
+        pedido.removeItem(itemId);
     }
 
     public Pedido getPedido() {
@@ -187,11 +196,4 @@ public class NewPedidoBean extends GenericBean implements Serializable{
         this.pedido = pedido;
     }
 
-    public ItemPedido getItem() {
-        return item;
-    }
-
-    public void setItem(ItemPedido item) {
-        this.item = item;
-    }
 }

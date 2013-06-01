@@ -23,6 +23,22 @@ public class FormaPagamento implements Serializable{
 
     @Column(precision = 7, scale = 4)
     private double taxaJurosMes;
+    
+    public Integer getTypeId() {
+        if (pagtoType == null){
+            return 0;
+        }
+        return pagtoType.getId();
+    }
+
+    public void setTypeId(Integer typeId) {
+        if(pagtoType == null){
+            pagtoType = new PagtoType();
+        }
+        pagtoType.setId(typeId);
+    }
+    
+    
 
     public int getId() {
         return id;
@@ -35,6 +51,11 @@ public class FormaPagamento implements Serializable{
     
 
     public PagtoType getPagtoType() {
+        
+        if(pagtoType == null){
+            pagtoType = new PagtoType();
+        }
+        
         return pagtoType;
     }
 
